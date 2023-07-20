@@ -6,66 +6,42 @@ trabalho. Escreva os seguintes métodos para esta classe:
   final calcula quanto o aluno precisa para a prova final (retorna zero se ele não for para a final)
 */
 
-class Livro {
-  String titulo;
-  String autor;
-  bool disponivel;
-
-  Livro(this.titulo, this.autor, this.disponivel);
-}
-
-class Pessoa {
+class Aluno {
+  int matricula;
   String nome;
-  List<Emprestimo> emprestimos = [];
+  double notaProva1;
+  double notaProva2;
+  double notaTrabalho;
 
-  Pessoa(this.nome);
+  Aluno(this.matricula, this.nome, this.notaProva1, this.notaProva2,
+      this.notaTrabalho);
 
-  void adicionarEmprestimo(Emprestimo emprestimo) {
-    emprestimos.add(emprestimo);
+  double media() {
+    double mediaProvas = (notaProva1 + notaProva2) * 2.5;
+    double mediaTrabalho = notaTrabalho * 2.0;
+    return (mediaProvas + mediaTrabalho) / 5.5;
   }
 
-  void imprimirEmprestimos() {
-    print("Empréstimos de $nome:");
-    for (var emprestimo in emprestimos) {
-      print(
-          "- Livro: ${emprestimo.livro.titulo}, Data de Empréstimo: ${emprestimo.dataEmprestimo}");
+  double finalNecessaria() {
+    double mediaAtual = media();
+    if (mediaAtual >= 6.0) {
+      return 0.0;
+    } else {
+      double notaNecessaria = (6.0 - mediaAtual) * 5.5 / 2.5;
+      return notaNecessaria.clamp(0.0, 10.0);
     }
   }
 }
 
-class Emprestimo {
-  Pessoa pessoa;
-  Livro livro;
-  DateTime dataEmprestimo;
-
-  Emprestimo(this.pessoa, this.livro, this.dataEmprestimo);
-}
-
 void main() {
-  Livro livro1 = Livro("O Senhor dos Anéis", "J.R.R. Tolkien", true);
-  Livro livro2 =
-      Livro("Harry Potter e a Pedra Filosofal", "J.K. Rowling", true);
-  Livro livro3 = Livro("Dom Quixote", "Miguel de Cervantes", false);
+  Aluno aluno1 = Aluno(12345, "João", 7.5, 8.0, 9.0);
+  Aluno aluno2 = Aluno(67890, "Maria", 6.0, 6.5, 7.0);
 
-  Pessoa pessoa1 = Pessoa("João");
-  Pessoa pessoa2 = Pessoa("Maria");
+  print("Aluno 1:");
+  print("Média final: ${aluno1.media()}");
+  print("Nota necessária na prova final: ${aluno1.finalNecessaria()}");
 
-  Emprestimo emprestimo1 = Emprestimo(pessoa1, livro1, DateTime.now());
-  livro1.disponivel = false;
-  pessoa1.adicionarEmprestimo(emprestimo1);
-
-  Emprestimo emprestimo2 = Emprestimo(pessoa2, livro2, DateTime.now());
-  livro2.disponivel = false;
-  pessoa2.adicionarEmprestimo(emprestimo2);
-
-  Emprestimo emprestimo3 = Emprestimo(pessoa1, livro3, DateTime.now());
-  if (livro3.disponivel) {
-    pessoa1.adicionarEmprestimo(emprestimo3);
-    livro3.disponivel = false;
-  } else {
-    print("O livro ${livro3.titulo} não está disponível para empréstimo.");
-  }
-
-  pessoa1.imprimirEmprestimos();
-  pessoa2.imprimirEmprestimos();
+  print("\nAluno 2:");
+  print("Média final: ${aluno2.media()}");
+  print("Nota necessária na prova final: ${aluno2.finalNecessaria()}");
 }
